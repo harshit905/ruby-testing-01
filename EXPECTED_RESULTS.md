@@ -43,3 +43,8 @@ falls to **unresolved** with **0 vulnerabilities** — a false all-clear.
   0.8.1; 0 unresolved.
 - FINDINGS to flag: rake marked production, colorize unresolved (generation
   failed), 0 vulns (false all-clear), or any invented version.
+
+## New edge case (regression re-test) — `require: false` gem
+The Gemfile adds `gem "dotenv", "2.7.0", require: false`.
+- **PASS:** `dotenv@2.7.0` is resolved and healthy (the `require: false` modifier
+  does not stop it being scanned).

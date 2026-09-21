@@ -22,6 +22,10 @@ group :development, :test do
   gem "rake", "12.3.0"
 end
 
+
+# New edge case: a `require: false` gem must still be resolved and scanned.
+gem "dotenv", "2.7.0", require: false
+
 # WORST CASE: a local `path:` gem. Its directory MUST be copied into the
 # resolver's scratch dir or `bundle lock` aborts and the WHOLE generation fails.
 # The gem is local code, not a registry dependency.
