@@ -30,3 +30,20 @@ gem "dotenv", "2.7.0", require: false
 # resolver's scratch dir or `bundle lock` aborts and the WHOLE generation fails.
 # The gem is local code, not a registry dependency.
 gem "local_widget", path: "vendor/local_widget"
+
+# ---- Round 2 edge cases ----
+
+# `ruby` directive with a requirement operator. Must not break `bundle lock`.
+ruby ">= 2.5.0"
+
+# KNOWN-VULNERABLE gem that pulls TRANSITIVES, one of which is ALSO vulnerable:
+# rack-protection 2.0.0 (CVE-2018-1000119). Also pulls mustermann, tilt, and
+# ruby2_keywords (all healthy). rack ~> 2.0 is satisfied by the pinned 2.0.6.
+gem "sinatra", "2.0.0"
+
+# Inline `group:` syntax (not a block). Healthy; must be classified DEV.
+gem "minitest", "5.14.0", group: :test
+
+# Platform-restricted gem: skipped on Linux MRI. Must not break generation and
+# must not be reported as unresolved.
+gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
