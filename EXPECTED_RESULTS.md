@@ -8,7 +8,7 @@ lock`. Every gem has a predictable outcome.
 | bucket | packages |
 |--------|----------|
 | Vulnerable | `rubyzip@1.2.1`, `rack@2.0.6`, `rake@12.3.0` (dev-scoped), `sinatra@2.0.0`, `rack-protection@2.0.0` (transitive) |
-| Healthy | `colorize@0.8.1`, `dotenv@2.7.0`, `minitest@5.14.0` (dev), `mustermann@1.1.2`, `ruby2_keywords@0.0.5`, `tilt@2.x` (transitives) |
+| Healthy | `colorize@0.8.1`, `dotenv@2.7.0`, `diff-lcs@1.5.0` (dev), `mustermann@1.1.2`, `ruby2_keywords@0.0.5`, `tilt@2.x` (transitives) |
 | Unresolved | none |
 
 `tzinfo-data` is platform-restricted (Windows/JRuby) and is absent from the
@@ -66,9 +66,16 @@ The Gemfile adds `gem "dotenv", "2.7.0", require: false`.
   transitive; the three healthy transitives present.
 - **FAIL:** rack-protection missing (no transitive discovery) or healthy.
 
-### B. Inline group syntax (`gem "minitest", "5.14.0", group: :test`)
-- **PASS:** `minitest@5.14.0` healthy, scope **DEV**.
+### B. Inline group syntax (`gem "diff-lcs", "1.5.0", group: :test`)
+- **PASS:** `diff-lcs@1.5.0` healthy, scope **DEV**.
 - **FAIL:** marked production (only the block form of `group` is parsed).
+
+Note (Sep 23 2026 scan): the first round-2 push used `minitest 5.14.0`, whose
+gemspec requires `ruby ~> 2.2`. On the scanner's Ruby 3.3 Bundler refuses to
+resolve the whole Gemfile, so every range fell to unresolved and no transitives
+appeared. That was a fixture bug, replaced by diff-lcs. It did expose two scanner
+behaviours: a failed `bundle lock` is silent (stderr is not logged), and the
+textual fallback classifies an inline `group: :test` gem as PROD.
 
 ### C. Platform-restricted gem (`tzinfo-data`, Windows/JRuby only)
 - **PASS:** generation succeeds; tzinfo-data absent or healthy; never
@@ -82,5 +89,5 @@ The Gemfile adds `gem "dotenv", "2.7.0", require: false`.
 
 ### Round 2 pass / fail (combined)
 - PASS: 5 vulnerable (rubyzip, rack, rake dev, sinatra, rack-protection
-  transitive); colorize, dotenv, minitest dev, mustermann, ruby2_keywords, tilt
+  transitive); colorize, dotenv, diff-lcs dev, mustermann, ruby2_keywords, tilt
   healthy; 0 unresolved.

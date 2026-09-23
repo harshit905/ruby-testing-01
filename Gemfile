@@ -41,8 +41,10 @@ ruby ">= 2.5.0"
 # ruby2_keywords (all healthy). rack ~> 2.0 is satisfied by the pinned 2.0.6.
 gem "sinatra", "2.0.0"
 
-# Inline `group:` syntax (not a block). Healthy; must be classified DEV.
-gem "minitest", "5.14.0", group: :test
+# Inline `group:` syntax (not a block). Healthy, zero deps, no Ruby upper
+# bound (minitest 5.14.0 declared `ruby ~> 2.2`, which makes Bundler on Ruby 3.x
+# refuse to resolve the WHOLE Gemfile). Must be classified DEV.
+gem "diff-lcs", "1.5.0", group: :test
 
 # Platform-restricted gem: skipped on Linux MRI. Must not break generation and
 # must not be reported as unresolved.
