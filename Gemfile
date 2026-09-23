@@ -49,3 +49,13 @@ gem "diff-lcs", "1.5.0", group: :test
 # Platform-restricted gem: skipped on Linux MRI. Must not break generation and
 # must not be reported as unresolved.
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
+
+# ---- Round 3: dev-only transitives ----
+
+# Test-group gem whose whole tree (rspec-core, rspec-expectations, rspec-mocks,
+# rspec-support) is reachable from no production gem: every one must be DEV.
+gem "rspec", "3.9.0", group: :test
+
+# Test-group gem whose only dependency (rack) is ALSO a production gem: rack
+# must stay PROD because a production dependency reaches it.
+gem "rack-test", "0.6.3", group: :test

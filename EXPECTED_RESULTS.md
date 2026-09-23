@@ -91,3 +91,17 @@ textual fallback classifies an inline `group: :test` gem as PROD.
 - PASS: 5 vulnerable (rubyzip, rack, rake dev, sinatra, rack-protection
   transitive); colorize, dotenv, diff-lcs dev, mustermann, ruby2_keywords, tilt
   healthy; 0 unresolved.
+
+## Round 3 edge cases — dev-only transitives
+
+### A. Transitives only a test-group gem pulls in (`rspec 3.9.0`, test)
+- **PASS:** `rspec@3.9.0` healthy **DEV** direct; `rspec-core@3.9.x`,
+  `rspec-expectations@3.9.x`, `rspec-mocks@3.9.x`, `rspec-support@3.9.x` healthy
+  **DEV** transitives.
+- **FAIL:** any rspec-* transitive marked PROD.
+
+### B. A transitive shared with a production gem (`rack-test 0.6.3`, test)
+`rack-test` (dev) depends on `rack`, which is also a production gem.
+- **PASS:** `rack-test@0.6.3` healthy **DEV** direct; `rack@2.0.6` stays
+  **PROD** (a production dependency reaches it).
+- **FAIL:** `rack` flips to DEV.
